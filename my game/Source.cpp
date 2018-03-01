@@ -13,8 +13,7 @@ int main(int argc, char* argv[]) {
 
 	SDL_Window *window = SDL_CreateWindow("Homework", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 800, SDL_WINDOW_SHOWN);
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
-	//SDL_SetRenderDrawColor(renderer, 0, 150, 255, 255);
-	//SDL_RenderClear(renderer);
+	
 
 	//Creating square
 	SDL_Rect rect;
@@ -34,6 +33,7 @@ int main(int argc, char* argv[]) {
 			if (event.type == SDL_QUIT) {
 				isRunning = false;
 			}
+			//moving square
 			switch (event.type) {
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym) {
@@ -54,6 +54,7 @@ int main(int argc, char* argv[]) {
 				
 			}
 		}
+		//limits of movement
 		if (rect.x < 0) {
 			rect.x = 0;
 		}
