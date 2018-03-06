@@ -1,13 +1,17 @@
+
 #include "SDL/include/SDL.h"
-#include "cstdbool"
+#include "SDL_Image/include/SDL_image.h"
+
+
 
 #pragma comment(lib, "SDL/libx86/SDL2.lib")
 #pragma comment(lib, "SDL/libx86/SDL2main.lib")
+#pragma comment(lib, "SDL_Image/libx86/SDL2_image.lib")
 
 
 int main(int argc, char* argv[]) {
 		
-	bool b[4] = { 0, 0, 0, 0 };
+	
 
 	SDL_Init(SDL_INIT_VIDEO);
 
