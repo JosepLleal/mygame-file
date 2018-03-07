@@ -9,14 +9,15 @@
 #pragma comment(lib, "SDL_Image/libx86/SDL2_image.lib")
 
 
+
 int main(int argc, char* argv[]) {
 		
 	
-
 	SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Window *window = SDL_CreateWindow("Homework", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 800, SDL_WINDOW_SHOWN);
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+	
 	
 
 	//Creating square
@@ -25,19 +26,26 @@ int main(int argc, char* argv[]) {
 	rect.h = 120;
 	rect.x = 440;
 	rect.y = 340;
-
+	
 	//Creating bullet
 	SDL_Rect bullet;
 	bullet.w = 50;
-	bullet.h = 5;
+	bullet.h = 5;       
 	
 
-
-
-	
-	bool isRunning = true;
 	SDL_Event event;
 	
+	bool isRunning = true;
+	bool up = false;
+	bool down = false;
+	bool left = false;
+	bool right = false;
+	bool space = false;
+
+	
+	/*if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
+		isRunning = false;
+	}*/
 			
 	while (isRunning) {
 
@@ -45,36 +53,99 @@ int main(int argc, char* argv[]) {
 			if (event.type == SDL_QUIT) {
 				isRunning = false;
 			}
+			
+
 			//moving square
-			switch (event.type) {
-			case SDL_KEYDOWN:
-				switch (event.key.keysym.sym) {
-				case SDLK_LEFT:
-					rect.x -= 10;
-					break;
-				case SDLK_RIGHT:
-					rect.x += 10;
-					break;
-				case SDLK_UP:
-					rect.y -= 10;
-					break;
-				case SDLK_DOWN:
-					rect.y += 10;
-					break;
-				//shooting bullet
-				case SDLK_SPACE:
-					bullet.x = rect.x+120;
-					bullet.y = rect.y+60;
-					break;
+			else if (event.type == SDL_KEYDOWN)
+			{
+				//****************************************************
+				if (event.key.keysym.sym == SDLK_UP)
+				{
+					up = true;
+				}
+				if (event.key.keysym.sym == SDLK_DOWN)
+				{
+					down = true;
+				}
+				if (event.key.keysym.sym == SDLK_LEFT)
+				{
+					left = true;
+				}
+				if (event.key.keysym.sym == SDLK_RIGHT)
+				{
+					right = true;
+				}
+				if (event.key.keysym.sym == SDLK_SPACE)
+				{
+					space = true;
 				}
 				
 				
 			}
-		}
+			
+				
+			
 
-		bullet.x++;
-		bullet.x++;
-		bullet.x++;
+			//****************************************************
+			else if (event.type == SDL_KEYUP)
+			{
+				if (event.key.keysym.sym == SDLK_UP)
+				{
+					up = false;
+				}
+				if (event.key.keysym.sym == SDLK_DOWN)
+				{
+					down = false;
+				}
+				if (event.key.keysym.sym == SDLK_LEFT)
+				{
+					left = false;
+				}
+				if (event.key.keysym.sym == SDLK_RIGHT)
+				{
+					right = false;
+				}
+				if (event.key.keysym.sym == SDLK_SPACE)
+				{
+					space = false;
+				}
+				
+				
+			}
+			
+			if (up == true)
+			{
+				rect.y -= 5;
+				
+			}
+
+			if (down == true)
+			{
+				rect.y += 5;
+			}
+
+			if (left == true)
+			{
+				rect.x -= 5;
+			}
+
+			if (right == true)
+			{
+				rect.x += 5;
+			}
+			if (space == true)
+			{
+				bullet.x = rect.x + 110;
+				bullet.y = rect.y + 60;
+				
+			}
+			
+		}
+	
+
+		
+		bullet.x+=10;
+		
 
 		//limits of movement
 		if (rect.x < 0) {
@@ -90,6 +161,8 @@ int main(int argc, char* argv[]) {
 			rect.y = 800 - rect.h;
 		}
 
+
+
 		//Refreshing color of square
 		SDL_SetRenderDrawColor(renderer, 0, 150, 255, 255);
 		SDL_RenderClear(renderer);
@@ -101,14 +174,16 @@ int main(int argc, char* argv[]) {
 		SDL_RenderFillRect(renderer, &bullet);
 
 		
-
 		SDL_RenderPresent(renderer);
 		//Reducing speed
-		SDL_Delay(3);
+		SDL_Delay(2);
 
 	}
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	IMG_Quit;
+	SDL_Quit();
 	
-
 	return 0;
 }
 
