@@ -16,7 +16,8 @@ int main(int argc, char* argv[]) {
 	SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Surface *surface;
-	SDL_Texture *texture;
+	SDL_Texture *backround;
+	SDL_Texture *ship;
 	SDL_Window *window = SDL_CreateWindow("Homework", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 800, SDL_WINDOW_SHOWN);
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
@@ -26,12 +27,6 @@ int main(int argc, char* argv[]) {
 	rect.h = 120;
 	rect.x = 440;
 	rect.y = 340;
-
-	SDL_Rect destination;
-	destination.h = 10;
-	destination.w = 10;
-	destination.x = 440;
-	destination.y = 340;
 	
 	//Creating bullet
 	SDL_Rect bullet;
@@ -52,9 +47,18 @@ int main(int argc, char* argv[]) {
 
 	
 	IMG_Init(IMG_INIT_PNG|IMG_INIT_JPG);
-	surface = IMG_Load("backround.png");
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
+	//backround
+	surface = IMG_Load("space.png");
+	backround = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
+
+	surface = IMG_Load("spaceship.png");
+	ship = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
+
+
+
+
 	
 
 	while (isRunning) {
@@ -147,7 +151,7 @@ int main(int argc, char* argv[]) {
 
 		}
 
-		bullet.x+=5;
+		bullet.x+=3;
 		
 		//limits of movement
 		if (rect.x < 0) {
@@ -169,13 +173,14 @@ int main(int argc, char* argv[]) {
 		//SDL_SetRenderDrawColor(renderer, 0, 150, 255, 255);
 		//SDL_RenderClear(renderer);
 
-		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		SDL_RenderCopy(renderer, backround, NULL, NULL);
+		SDL_RenderCopy(renderer, ship, NULL, &rect);
 
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 		SDL_RenderFillRect(renderer, &bullet);
 
-		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-		SDL_RenderFillRect(renderer, &rect);
+		//SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		//SDL_RenderFillRect(renderer, &rect);
 
 		
 		SDL_RenderPresent(renderer);
@@ -183,6 +188,7 @@ int main(int argc, char* argv[]) {
 		SDL_Delay(1);
 
 	}
+
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	IMG_Quit();
