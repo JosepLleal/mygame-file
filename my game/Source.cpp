@@ -1,12 +1,14 @@
 
 #include "SDL/include/SDL.h"
 #include "SDL_Image/include/SDL_image.h"
-
+#include "SDL_Mixer/Include/SDL_mixer.h"
 
 
 #pragma comment(lib, "SDL/libx86/SDL2.lib")
 #pragma comment(lib, "SDL/libx86/SDL2main.lib")
 #pragma comment(lib, "SDL_Image/libx86/SDL2_image.lib")
+#pragma comment(lib, "SDL_Mixer/libx86/SDL2_mixer.lib")
+
 
 void createBullet(SDL_Rect* rect, SDL_Rect* bullet) {
 	bullet->w = 50;
@@ -20,7 +22,7 @@ void createBullet(SDL_Rect* rect, SDL_Rect* bullet) {
 int main(int argc, char* argv[]) {
 		
 	
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
 
 	SDL_Event event;
 	//bool for the loop
@@ -38,13 +40,25 @@ int main(int argc, char* argv[]) {
 	SDL_Texture *ship;
 	SDL_Texture *projectile;
 
+	
+
+
 	SDL_Window *window = SDL_CreateWindow("SideScroller Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 800, SDL_WINDOW_SHOWN);
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+	//Channel audio
+	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
+
+	Mix_Chunk* laser;
+	laser = Mix_LoadWAV("Assets/Audio/laser1.wav");
+
+	Mix_Music *music;
+	music = Mix_LoadMUS("Assets/Audio/arcade_song.ogg");
 
 	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
 	//------------------------------------------------------------------------------------------------------------------------------
 	//backround
-	surface = IMG_Load("space.png");
+	surface = IMG_Load("Assets/Images/space.png");
 	if (surface == NULL) {
 		isRunning = false;
 	}
@@ -53,7 +67,7 @@ int main(int argc, char* argv[]) {
 
 
 	//spaceship
-	surface = IMG_Load("spaceship.png");
+	surface = IMG_Load("Assets/Images/spaceship.png");
 	if (surface == NULL) {
 		isRunning = false;
 	}
@@ -62,7 +76,7 @@ int main(int argc, char* argv[]) {
 
 
 	//bullet
-	surface = IMG_Load("projectile.png");
+	surface = IMG_Load("Assets/Images/projectile.png");
 	if (surface == NULL) {
 		isRunning = false;
 	}
@@ -84,6 +98,9 @@ int main(int argc, char* argv[]) {
 	//Creating bullet
 	SDL_Rect bullet[allBullets];
 	
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
+	Mix_PlayMusic(music, -1);
+
 	//Starting loop
 	while (isRunning) {
 
@@ -119,6 +136,7 @@ int main(int argc, char* argv[]) {
 					bullets[counterB] = 1;
 					createBullet(&rect, &bullet[counterB]);
 					counterB++;
+					Mix_PlayChannel(-1, laser, 0);
 					if (counterB >= allBullets) {
 						counterB = 0;
 					}
@@ -159,7 +177,7 @@ int main(int argc, char* argv[]) {
 
 			if (bullets[j] == 1)
 			{
-				++bullet[j].x;
+				bullet[j].x+=2;
 				SDL_RenderCopy(renderer, projectile, NULL, &bullet[j]);			
 			}
 		}
@@ -220,9 +238,10 @@ int main(int argc, char* argv[]) {
 		SDL_Delay(1);
 
 	}
-
+	Mix_FreeMusic(music);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	Mix_CloseAudio();
 	IMG_Quit();
 	SDL_Quit();
 	
